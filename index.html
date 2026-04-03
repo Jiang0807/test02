@@ -409,6 +409,26 @@
       box-shadow: var(--shadow-md);
     }
 
+    .btn-action--sync {
+      background: linear-gradient(135deg, #FFB347, #FF8C00);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-action--sync:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-action--sync--pending {
+      animation: syncPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes syncPulse {
+      0%, 100% { box-shadow: var(--shadow-sm); }
+      50% { box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.3), 0 0 12px rgba(255, 140, 0, 0.3); }
+    }
+
     .btn-action input[type="file"] {
       position: absolute;
       top: 0; left: 0;
@@ -839,6 +859,157 @@
       box-shadow: var(--shadow-sm);
     }
 
+    /* ========================================
+       ✏️ 照片卡片操作按钮 (编辑/删除)
+    ======================================== */
+    .photo-card__actions {
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      display: flex;
+      gap: 6px;
+      z-index: 5;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: all var(--transition-fast);
+    }
+
+    .photo-card:hover .photo-card__actions {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .photo-card__action-btn {
+      width: 32px; height: 32px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: all var(--transition-fast);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .photo-card__action-btn--edit {
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--color-accent-blue);
+    }
+
+    .photo-card__action-btn--edit:hover {
+      background: var(--color-accent-blue);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .photo-card__action-btn--delete {
+      background: rgba(255, 255, 255, 0.92);
+      color: #ef4444;
+    }
+
+    .photo-card__action-btn--delete:hover {
+      background: #ef4444;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* 编辑弹窗 */
+    .edit-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(93, 64, 55, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      padding: var(--space-lg);
+    }
+
+    .edit-overlay.active { opacity: 1; visibility: visible; }
+
+    .edit-panel {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 480px;
+      box-shadow: var(--shadow-lg);
+      transform: scale(0.9) translateY(20px);
+      transition: all var(--transition-slow);
+      overflow: hidden;
+    }
+
+    .edit-overlay.active .edit-panel { transform: scale(1) translateY(0); }
+
+    .edit-panel__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg) var(--space-xl);
+      border-bottom: 2px solid var(--color-border);
+      background: linear-gradient(135deg, #87CEEB, var(--color-accent-purple));
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .edit-panel__title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-xl);
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .edit-panel__close {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-primary);
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .edit-panel__close:hover { background: #ef4444; color: white; transform: rotate(90deg); }
+
+    .edit-panel__body { padding: var(--space-xl); }
+
+    .edit-panel__preview {
+      width: 100%;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .edit-panel__preview img {
+      width: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .edit-panel__footer {
+      padding: var(--space-lg) var(--space-xl);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: var(--space-md);
+      justify-content: flex-end;
+    }
+
     /* 月度寄语卡片 */
     .message-card {
       grid-column: 1 / -1;
@@ -1161,6 +1332,10 @@
       <span>📤</span><span>上传照片</span>
     </button>
 
+    <button class="btn-action btn-action--sync" id="btnSync" onclick="syncToFile()" aria-label="同步数据到文件">
+      <span>📤</span><span>同步到文件</span>
+    </button>
+
     <button class="btn-action btn-action--export" onclick="exportAlbumData()" aria-label="导出数据备份">
       <span>💾</span><span>导出数据</span>
     </button>
@@ -1259,6 +1434,43 @@
   </div>
 
   <!-- ========================================
+       ✏️ 编辑文案弹窗
+  ======================================== -->
+  <div class="edit-overlay" id="editOverlay" onclick="closeEditPanel(event)">
+    <div class="edit-panel" onclick="event.stopPropagation()">
+      <div class="edit-panel__header">
+        <h2 class="edit-panel__title">✏️ 编辑照片信息</h2>
+        <button class="edit-panel__close" onclick="closeEditPanel(event)" aria-label="关闭">✕</button>
+      </div>
+      <div class="edit-panel__body">
+        <div class="edit-panel__preview">
+          <img id="editPreviewImg" src="" alt="照片预览">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editCaption">照片描述</label>
+          <input type="text"
+                 class="form-input"
+                 id="editCaption"
+                 placeholder="给这张照片写点文字吧~"
+                 maxlength="50">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editDate">拍摄日期</label>
+          <input type="text"
+                 class="form-input"
+                 id="editDate"
+                 placeholder="例如：2024-01-15 或 今天"
+                 maxlength="20">
+        </div>
+      </div>
+      <div class="edit-panel__footer">
+        <button class="btn btn--secondary" onclick="closeEditPanel(event)">取消</button>
+        <button class="btn btn--primary" onclick="savePhotoEdit()">💾 保存修改</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
        💡 Lightbox
   ======================================== -->
   <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
@@ -1272,14 +1484,27 @@
   </div>
 
   <!-- ========================================
+       📦 内嵌照片数据（公开可见）
+       上传/编辑照片后，点「同步到文件」更新此处数据
+  ======================================== -->
+  <script id="embeddedDataScript" type="application/json">
+    /* EMBEDDED_DATA_PLACEHOLDER */
+  </script>
+
+  <!-- ========================================
        JavaScript
   ======================================== -->
   <script>
     // ============================================================
-    // 📦 数据存储（使用 localStorage）
+    // 📦 数据存储（内嵌数据 + localStorage 双模式）
     // ============================================================
     const STORAGE_KEY = 'baby_growth_album_photos';
     const TOTAL_MONTHS = 38;
+
+    // 🔑 核心变更：照片数据内嵌在 HTML 中（EMBEDDED_DATA）
+    // 这样推送到 GitHub 后，所有人打开网站都能看到照片
+    // 管理员上传/编辑后需要点「📤 同步到文件」更新
+    let EMBEDDED_DATA = {};  // 内嵌的公开数据（从 HTML 中的 script 标签读取）
 
     // 月份数据模板（含默认寄语）
     const MONTH_TEMPLATES = {
@@ -1303,16 +1528,79 @@
     };
 
     // ============================================================
-    // 📊 数据管理
+    // 📊 数据管理（双模式：内嵌数据 + localStorage 缓存）
     // ============================================================
+
+    // 标记数据是否有未保存的变更
+    let hasUnsavedChanges = false;
+
     function loadPhotos() {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      } catch { return {}; }
+        // 优先使用 localStorage（可能包含本地新增的修改）
+        const localData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (localData && Object.keys(localData).length > 0) {
+          return localData;
+        }
+        // 否则回退到内嵌数据
+        return { ...EMBEDDED_DATA };
+      } catch { return { ...EMBEDDED_DATA }; }
     }
 
     function savePhotos(data) {
+      // 保存到 localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      hasUnsavedChanges = true;
+      updateSyncButton();
+    }
+
+    // 同步：将当前数据生成为可下载的完整 HTML 文件
+    function syncToFile() {
+      const allData = loadPhotos();
+      const total = getTotalPhotoCount();
+
+      if (total === 0) {
+        showToast('还没有任何照片，无需同步~', 'info');
+        return;
+      }
+
+      // 获取当前页面的完整 HTML
+      let html = document.documentElement.outerHTML;
+
+      // 将照片数据嵌入到 HTML 中（替换 EMBEDDED_DATA 的赋值部分）
+      const dataStr = JSON.stringify(allData, null, 2);
+      html = html.replace(
+        /(let EMBEDDED_DATA\s*=\s*)\{[\s\S]*?(;?\s*\/\/ 月份数据模板)/,
+        '$1' + dataStr + '\n$2'
+      );
+
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      hasUnsavedChanges = false;
+      updateSyncButton();
+
+      showToast(`📤 已下载更新后的网页文件！共 ${total} 张照片。请用此文件替换原文件后 git push ~`, 'success');
+    }
+
+    function updateSyncButton() {
+      const btn = document.getElementById('btnSync');
+      if (btn) {
+        if (hasUnsavedChanges) {
+          btn.classList.add('btn-action--sync--pending');
+          btn.innerHTML = '<span>📤</span><span>同步到文件</span>';
+        } else {
+          btn.classList.remove('btn-action--sync--pending');
+          btn.innerHTML = '<span>📤</span><span>同步到文件</span>';
+        }
+      }
     }
 
     function addPhotos(month, photos) {
@@ -1366,7 +1654,11 @@
                   <p class="empty-state__text">这个月还没有照片哦~<br>点击上方「上传照片」按钮添加吧！</p>
                 </div>
               `}
-              ${photos.map((photo, idx) => renderPhotoCard(photo, idx + 1)).join('')}
+              ${photos.map((photo, idx) => {
+                // 给照片对象附加月份信息
+                photo.month = m;
+                return renderPhotoCard(photo, idx + 1);
+              }).join('')}
             </div>
           </article>
         `;
@@ -1394,13 +1686,22 @@
 
       return `
         <figure class="photo-card ${isLandscape ? 'photo-card--landscape' : ''} fade-in"
-                 onclick="openLightbox(this)" data-photo-id="${photo.id}">
+                 data-photo-id="${photo.id}" data-month="${photo.month || ''}">
           <div class="photo-card__image-wrapper">
             <img src="${photo.dataUrl}" alt="${escapeHtml(photo.caption || '成长照片')}" loading="lazy">
             <span class="photo-card__corner-deco">${emoji}</span>
             ${index <= 9 ? `<span class="photo-card__index">${index}</span>` : ''}
+            <!-- 操作按钮：编辑 + 删除 -->
+            <div class="photo-card__actions">
+              <button class="photo-card__action-btn photo-card__action-btn--edit"
+                      onclick="event.stopPropagation(); openEditPanel('${photo.id}')"
+                      title="编辑文案">✏️</button>
+              <button class="photo-card__action-btn photo-card__action-btn--delete"
+                      onclick="event.stopPropagation(); deletePhotoConfirm('${photo.id}')"
+                      title="删除照片">🗑️</button>
+            </div>
           </div>
-          <figcaption class="photo-card__footer">
+          <figcaption class="photo-card__footer" onclick="openLightbox(this.closest('.photo-card'))">
             <p class="photo-card__caption">${escapeHtml(photo.caption || '美好的回忆')}</p>
             <p class="photo-card__date">📅 ${photo.date || '回忆时刻'}</p>
           </figcaption>
@@ -1634,7 +1935,7 @@
 
       addPhotos(month, photos);
 
-      showToast(`✅ 成功添加 ${photos.length} 张照片到「第${month}个月」相册！`, 'success');
+      showToast(`✅ 成功添加 ${photos.length} 张照片到「第${month}个月」相册！记得点「📤 同步到文件」让所有人都能看到~`, 'success');
 
       closeUploadModal();
       renderAlbum();
@@ -1722,6 +2023,136 @@
     document.getElementById('uploadModal').addEventListener('click', (e) => {
       if (e.target === document.getElementById('uploadModal')) closeUploadModal();
     });
+
+    // ============================================================
+    // ✏️ 编辑照片文案功能
+    // ============================================================
+    let editingPhotoId = null;
+
+    function openEditPanel(photoId) {
+      const allData = loadPhotos();
+      let photo = null;
+      let monthKey = null;
+
+      for (const month in allData) {
+        const found = allData[month].find(p => p.id === photoId);
+        if (found) { photo = found; monthKey = month; break; }
+      }
+
+      if (!photo) {
+        showToast('❌ 找不到这张照片的信息', 'error');
+        return;
+      }
+
+      editingPhotoId = { id: photoId, month: monthKey };
+
+      document.getElementById('editPreviewImg').src = photo.dataUrl;
+      document.getElementById('editCaption').value = photo.caption || '';
+      document.getElementById('editDate').value = photo.date || '';
+
+      const overlay = document.getElementById('editOverlay');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // 聚焦到输入框
+      setTimeout(() => document.getElementById('editCaption').focus(), 300);
+    }
+
+    function closeEditPanel(e) {
+      if (e && e.target !== e.currentTarget && !e.target.classList.contains('edit-panel__close')) return;
+      document.getElementById('editOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      editingPhotoId = null;
+    }
+
+    function savePhotoEdit() {
+      if (!editingPhotoId) return;
+
+      const newCaption = document.getElementById('editCaption').value.trim();
+      const newDate = document.getElementById('editDate').value.trim();
+
+      const allData = loadPhotos();
+      if (allData[editingPhotoId.month]) {
+        const photoIndex = allData[editingPhotoId.month].findIndex(p => p.id === editingPhotoId.id);
+        if (photoIndex !== -1) {
+          allData[editingPhotoId.month][photoIndex].caption = newCaption;
+          allData[editingPhotoId.month][photoIndex].date = newDate;
+          savePhotos(allData);
+
+          closeEditPanel({ target: document.getElementById('editOverlay'), currentTarget: document.getElementById('editOverlay') });
+          renderAlbum();
+
+          showToast('✅ 照片文案已更新！记得点「📤 同步到文件」保存更改哦~', 'success');
+          return;
+        }
+      }
+
+      showToast('❌ 保存失败，请重试', 'error');
+    }
+
+    // 编辑弹窗键盘支持
+    document.addEventListener('keydown', (e) => {
+      const editPanel = document.getElementById('editOverlay');
+      if (!editPanel.classList.contains('active')) return;
+      if (e.key === 'Escape') {
+        closeEditPanel({ target: editPanel, currentTarget: editPanel });
+      } else if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+        savePhotoEdit();
+      }
+    });
+
+    // ============================================================
+    // 🗑️ 删除照片功能
+    // ============================================================
+    function deletePhotoConfirm(photoId) {
+      // 找到照片信息用于确认提示
+      const allData = loadPhotos();
+      let photoInfo = null;
+      for (const month in allData) {
+        const found = allData[month].find(p => p.id === photoId);
+        if (found) { photoInfo = { ...found, month }; break; }
+      }
+
+      const caption = photoInfo?.caption || '这张照片';
+      const confirmMsg = `确定要删除「${caption}」吗？\n\n⚠️ 删除后无法恢复，请谨慎操作！`;
+
+      if (!confirm(confirmMsg)) return;
+
+      // 执行删除
+      deletePhotoFromStore(photoInfo.month, photoId);
+    }
+
+    function deletePhotoFromStore(month, photoId) {
+      const allData = loadPhotos();
+      if (allData[month]) {
+        const beforeCount = allData[month].length;
+        allData[month] = allData[month].filter(p => p.id !== photoId);
+        const afterCount = allData[month].length;
+
+        // 如果该月份没有照片了，删除空数组
+        if (allData[month].length === 0) delete allData[month];
+
+        savePhotos(allData);
+        renderAlbum();
+
+        showToast(`🗑️ 照片已删除（第${month}个月剩余 ${afterCount} 张）！记得点「📤 同步到文件」保存更改~`, 'success');
+
+        // 添加一个有趣的动画效果 - 卡片消失
+        animateCardRemoval(photoId);
+      }
+    }
+
+    function animateCardRemoval(photoId) {
+      const card = document.querySelector(`.photo-card[data-photo-id="${photoId}"]`);
+      if (card) {
+        card.style.transition = 'all 0.4s ease';
+        card.style.transform = 'scale(0.8) translateY(-20px)';
+        card.style.opacity = '0';
+        setTimeout(() => {
+          card.style.display = 'none';
+        }, 400);
+      }
+    }
 
     // ============================================================
     // 💾 导出 / 📂 导入 数据功能
@@ -1815,9 +2246,21 @@
     // 🚀 初始化
     // ============================================================
     document.addEventListener('DOMContentLoaded', () => {
+      // 从内嵌 script 标签读取预存的照片数据
+      try {
+        const embeddedScript = document.getElementById('embeddedDataScript');
+        if (embeddedScript && embeddedScript.textContent.trim() && !embeddedScript.textContent.includes('EMBEDDED_DATA_PLACEHOLDER')) {
+          EMBEDDED_DATA = JSON.parse(embeddedScript.textContent);
+        }
+      } catch (e) {
+        console.warn('读取内嵌数据失败，使用空数据', e);
+        EMBEDDED_DATA = {};
+      }
+
       initTimelineNav();
       setupScrollListener();
       renderAlbum();
+      updateSyncButton();
     });
   </script>
 </body>
