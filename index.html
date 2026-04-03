@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👶 小宝贝成长相册</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       设计令牌系统 (Design Tokens)
+    ======================================== */
+    :root {
+      --color-primary: #FF6B9D;
+      --color-primary-light: #FFE0EB;
+      --color-primary-dark: #E84A7F;
+      --color-secondary: #4ECDC4;
+      --color-secondary-light: #E0F7F5;
+      --color-accent-yellow: #FFE66D;
+      --color-accent-orange: #FFA07A;
+      --color-accent-purple: #B19CD9;
+      --color-accent-blue: #87CEEB;
+      --color-text-primary: #5D4037;
+      --color-text-secondary: #8D6E63;
+      --color-text-white: #FFFFFF;
+      --color-bg-main: #FFF8F3;
+      --color-bg-card: #FFFFFF;
+      --color-border: #F0DDD5;
+      --color-shadow: rgba(255, 107, 157, 0.15);
+      --font-display: 'ZCOOL KuaiLe', cursive, sans-serif;
+      --font-body: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-size-xs: 0.75rem;
+      --font-size-sm: 0.875rem;
+      --font-size-base: 1rem;
+      --font-size-lg: 1.125rem;
+      --font-size-xl: 1.35rem;
+      --font-size-2xl: 1.75rem;
+      --font-size-3xl: 2.25rem;
+      --font-size-4xl: 3rem;
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 0.75rem;
+      --space-base: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+      --radius-sm: 0.5rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.5rem;
+      --radius-xl: 2rem;
+      --radius-full: 50%;
+      --shadow-sm: 0 2px 8px rgba(255, 107, 157, 0.08);
+      --shadow-md: 0 4px 16px rgba(255, 107, 157, 0.12);
+      --shadow-lg: 0 8px 32px rgba(255, 107, 157, 0.18);
+      --shadow-hover: 0 12px 40px rgba(255, 107, 157, 0.25);
+      --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-normal: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html { scroll-behavior: smooth; font-size: 16px; }
+    
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-bg-main);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+      background-image:
+        radial-gradient(circle at 10% 20%, var(--color-primary-light) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, var(--color-secondary-light) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(255, 230, 109, 0.3) 0%, transparent 30%);
+    }
+
+    .bg-dots {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle, var(--color-border) 1.5px, transparent 1.5px);
+      background-size: 36px 36px;
+      opacity: 0.5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--space-base);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ========================================
+       🎪 Hero 头部
+    ======================================== */
+    .hero {
+      text-align: center;
+      padding: var(--space-3xl) var(--space-base) var(--space-2xl);
+      position: relative;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent-purple));
+      color: var(--color-primary-dark);
+      padding: var(--space-xs) var(--space-lg);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      margin-bottom: var(--space-lg);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-4xl);
+      color: var(--color-primary);
+      margin-bottom: var(--space-base);
+      line-height: 1.2;
+      text-shadow: 2px 2px 0 var(--color-accent-yellow), 4px 4px 0 rgba(255, 107, 157, 0.15);
+      letter-spacing: 2px;
+    }
+
+    @media (min-width: 768px) {
+      .hero__title { font-size: 4.5rem; }
+    }
+
+    .hero__subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-xl);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-xl);
+      flex-wrap: wrap;
+      margin-top: var(--space-xl);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      min-width: 120px;
+      transition: var(--transition-normal);
+    }
+
+    .stat-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+    .stat-icon { font-size: 2rem; margin-bottom: var(--space-xs); }
+    .stat-value { font-family: var(--font-display); font-size: var(--font-size-2xl); color: var(--color-primary); }
+    .stat-label { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+
+    .decoration {
+      position: absolute;
+      pointer-events: none;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .decoration--cloud { font-size: 3rem; top: 60px; left: 5%; animation-delay: 0s; }
+    .decoration--star { font-size: 2rem; top: 40px; right: 8%; animation: twinkle 2s ease-in-out infinite; }
+    .decoration--balloon { font-size: 2.5rem; bottom: 20px; left: 10%; animation-delay: 2s; }
+    .decoration--heart { font-size: 1.8rem; bottom: 40px; right: 12%; animation-delay: 1.5s; }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+      50% { opacity: 0.5; transform: scale(1.2) rotate(15deg); }
+    }
+
+    /* 彩虹分隔线 */
+    .rainbow-divider {
+      height: 6px;
+      background: linear-gradient(90deg,
+        #FF6B9D, #FFA07A, #FFE66D, #4ECDC4, #87CEEB, #B19CD9, #FF6B9D);
+      background-size: 200% 100%;
+      animation: rainbowMove 4s linear infinite;
+    }
+
+    @keyframes rainbowMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* ========================================
+       📅 时间线导航
+    ======================================== */
+    .timeline-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 248, 243, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--color-border);
+      padding: var(--space-base) 0;
+      transition: var(--transition-normal);
+    }
+
+    .timeline-nav.scrolled { box-shadow: var(--shadow-md); }
+
+    .timeline-nav__title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      text-align: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .timeline-scroll {
+      display: flex;
+      gap: var(--space-sm);
+      overflow-x: auto;
+      padding: var(--space-sm) var(--space-base);
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-primary) var(--color-primary-light);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .timeline-scroll::-webkit-scrollbar { height: 6px; }
+    .timeline-scroll::-webkit-scrollbar-track { background: var(--color-primary-light); border-radius: var(--radius-full); }
+    .timeline-scroll::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: var(--radius-full); }
+
+    .month-btn {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-sm) var(--space-md);
+      border: 2px solid var(--color-border);
+      background: var(--color-bg-card);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      min-width: 72px;
+      text-decoration: none;
+    }
+
+    .month-btn:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .month-btn.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      border-color: var(--color-primary);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .month-btn__num { font-family: var(--font-display); font-size: var(--font-size-base); font-weight: 700; }
+    .month-btn.active .month-btn__num { color: white; }
+    .month-btn__label { font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-top: 2px; }
+    .month-btn.active .month-btn__label { color: rgba(255, 255, 255, 0.85); }
+
+    /* ========================================
+       🔼 上传按钮区域 (Upload Button Area)
+    ======================================== */
+    .upload-bar {
+      display: flex;
+      justify-content: center;
+      padding: var(--space-lg) 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn-upload {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent-orange));
+      color: white;
+      font-family: var(--font-display);
+      font-size: var(--font-size-lg);
+      border: none;
+      border-radius: var(--radius-xl);
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-upload::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-upload:hover::before { left: 100%; }
+
+    .btn-upload:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .btn-upload:active { transform: translateY(0) scale(0.98); }
+
+    .btn-upload__icon { font-size: 1.4em; animation: bounceIcon 2s ease-in-out infinite; }
+
+    @keyframes bounceIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .btn-upload input[type="file"] {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* 导出/导入按钮组 */
+    .action-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-lg) 0;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-xl);
+      font-family: var(--font-display);
+      font-size: var(--font-size-base);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .btn-action--upload {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent-orange));
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-action--upload:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .btn-action--export {
+      background: linear-gradient(135deg, var(--color-secondary), #3BA99C);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-action--export:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-action--import {
+      background: white;
+      color: var(--color-accent-purple);
+      border-color: var(--color-accent-purple);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-action--import:hover {
+      transform: translateY(-3px);
+      background: var(--color-accent-purple);
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-action input[type="file"] {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* ========================================
+       📤 上传弹窗 (Upload Modal)
+    ======================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(93, 64, 55, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      padding: var(--space-lg);
+    }
+
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+
+    .modal {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      transform: scale(0.9) translateY(20px);
+      transition: all var(--transition-slow);
+      position: relative;
+    }
+
+    .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+    .modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg) var(--space-xl);
+      border-bottom: 2px solid var(--color-border);
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .modal__title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-xl);
+      color: var(--color-primary-dark);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .modal__close {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-primary);
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .modal__close:hover { background: var(--color-primary); color: white; transform: rotate(90deg); }
+
+    .modal__body { padding: var(--space-xl); }
+
+    /* ---- 上传区域拖拽框 ---- */
+    .upload-zone {
+      border: 3px dashed var(--color-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl) var(--space-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      background: linear-gradient(135deg, rgba(255, 224, 235, 0.3), rgba(224, 247, 245, 0.3));
+      position: relative;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--color-primary-dark);
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+      transform: scale(1.02);
+      box-shadow: var(--shadow-md);
+    }
+
+    .upload-zone__icon { font-size: 4rem; margin-bottom: var(--space-md); animation: float 2s ease-in-out infinite; }
+
+    .upload-zone__text {
+      font-family: var(--font-display);
+      font-size: var(--font-size-lg);
+      color: var(--color-primary-dark);
+      margin-bottom: var(--space-sm);
+    }
+
+    .upload-zone__hint {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* ---- 上传选项表单 ---- */
+    .upload-form {
+      margin-top: var(--space-xl);
+    }
+
+    .form-group { margin-bottom: var(--space-lg); }
+
+    .form-label {
+      display: block;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-sm);
+      font-size: var(--font-size-sm);
+    }
+
+    .form-label__required { color: var(--color-primary); margin-left: 2px; }
+
+    .form-select,
+    .form-input {
+      width: 100%;
+      padding: var(--space-md);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-base);
+      font-family: var(--font-body);
+      background: var(--color-bg-card);
+      color: var(--color-text-primary);
+      transition: all var(--transition-fast);
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-select:focus,
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1);
+    }
+
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23FF6B9D' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--space-md) center;
+      padding-right: var(--space-2xl);
+    }
+
+    /* ---- 预览区 ---- */
+    .preview-area {
+      margin-top: var(--space-lg);
+    }
+
+    .preview-area__title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-base);
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid var(--color-border);
+      transition: all var(--transition-fast);
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .preview-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-item__remove {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 24px; height: 24px;
+      border-radius: var(--radius-full);
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      border: none;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+      opacity: 0;
+    }
+
+    .preview-item:hover .preview-item__remove { opacity: 1; }
+    .preview-item__remove:hover { background: #dc2626; transform: scale(1.1); }
+
+    .preview-item__name {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 4px;
+      background: rgba(0,0,0,0.55);
+      color: white;
+      font-size: 10px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ---- 提交按钮 ---- */
+    .modal__footer {
+      padding: var(--space-lg) var(--space-xl);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: var(--space-md);
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md) var(--space-xl);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: none;
+      gap: var(--space-sm);
+    }
+
+    .btn--primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+    }
+
+    .btn--primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn--primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn--secondary {
+      background: var(--color-bg-main);
+      color: var(--color-text-primary);
+      border: 2px solid var(--color-border);
+    }
+
+    .btn--secondary:hover { background: var(--color-border); }
+
+    /* ========================================
+       📸 相册区域
+    ======================================== */
+    .album-section { padding: var(--space-2xl) 0 var(--space-3xl); }
+
+    .album-header {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .album-month-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: linear-gradient(135deg, var(--color-accent-yellow), var(--color-accent-orange));
+      color: var(--color-text-primary);
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-full);
+      font-family: var(--font-display);
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--space-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .album-title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-2xl);
+      color: var(--color-text-primary);
+    }
+
+    .album-desc {
+      font-size: var(--font-size-base);
+      color: var(--color-text-secondary);
+      margin-top: var(--space-sm);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* 照片网格 */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-lg);
+      padding: var(--space-md) 0;
+    }
+
+    .photo-card {
+      position: relative;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      break-inside: avoid;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .photo-card__image-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 130%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f5f5f5, #eee);
+    }
+
+    .photo-card--landscape .photo-card__image-wrapper { padding-bottom: 70%; }
+
+    .photo-card__image-wrapper img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform var(--transition-slow);
+    }
+
+    .photo-card:hover .photo-card__image-wrapper img { transform: scale(1.08); }
+
+    .photo-card__corner-deco {
+      position: absolute;
+      top: var(--space-sm); right: var(--space-sm);
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--color-accent-yellow), var(--color-accent-orange));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow-sm);
+      z-index: 2;
+    }
+
+    .photo-card__footer {
+      padding: var(--space-md);
+      background: var(--color-bg-card);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .photo-card__caption {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-primary);
+      font-weight: 500;
+      margin-bottom: var(--space-xs);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .photo-card__date {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .photo-card__index {
+      position: absolute;
+      bottom: calc(var(--space-md) + 42px);
+      left: var(--space-md);
+      background: var(--color-primary);
+      color: white;
+      width: 28px; height: 28px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      z-index: 2;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 月度寄语卡片 */
+    .message-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light), var(--color-bg-card));
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 2px dashed var(--color-primary);
+    }
+
+    .message-card::before {
+      content: '"';
+      position: absolute;
+      top: 10px; left: 20px;
+      font-size: 5rem;
+      font-family: Georgia, serif;
+      color: var(--color-primary);
+      opacity: 0.2;
+      line-height: 1;
+    }
+
+    .message-card__icon { font-size: 2.5rem; margin-bottom: var(--space-sm); }
+    .message-card__text {
+      font-family: var(--font-display);
+      font-size: var(--font-size-lg);
+      color: var(--color-text-primary);
+      line-height: 1.8;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message-card__author {
+      margin-top: var(--space-md);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+    }
+
+    /* 分隔符 */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin: var(--space-2xl) 0;
+      color: var(--color-primary);
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: ''; flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+    }
+
+    .section-divider-icon { font-size: 1.5rem; }
+
+    .month-album { scroll-margin-top: 120px; padding-bottom: var(--space-2xl); }
+    .month-album:last-child { padding-bottom: 0; }
+
+    /* 空状态提示 */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: var(--space-3xl) var(--space-lg);
+      color: var(--color-text-secondary);
+    }
+
+    .empty-state__icon { font-size: 4rem; margin-bottom: var(--space-md); opacity: 0.5; }
+    .empty-state__text { font-family: var(--font-display); font-size: var(--font-size-lg); }
+
+    /* ========================================
+       💡 Lightbox
+    ======================================== */
+    .lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(93, 64, 55, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      padding: var(--space-lg);
+    }
+
+    .lightbox.active { opacity: 1; visibility: visible; }
+
+    .lightbox__content {
+      position: relative;
+      max-width: 90vw; max-height: 90vh;
+      animation: lightboxIn var(--transition-slow);
+    }
+
+    @keyframes lightboxIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .lightbox__image {
+      max-width: 100%; max-height: 85vh;
+      object-fit: contain;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .lightbox__close {
+      position: absolute;
+      top: -44px; right: 0;
+      background: white;
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: var(--radius-full);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-primary);
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lightbox__close:hover { background: var(--color-primary); color: white; transform: rotate(90deg); }
+
+    .lightbox__caption {
+      text-align: center;
+      margin-top: var(--space-md);
+      color: white;
+      font-size: var(--font-size-base);
+      font-weight: 500;
+    }
+
+    .lightbox__nav {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      background: white;
+      border: none;
+      width: 44px; height: 44px;
+      border-radius: var(--radius-full);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-primary);
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-md);
+    }
+
+    .lightbox__nav:hover { background: var(--color-primary); color: white; }
+    .lightbox__prev { left: -18px; }
+    .lightbox__next { right: -18px; }
+
+    /* ========================================
+       Toast 提示
+    ======================================== */
+    .toast-container {
+      position: fixed;
+      top: 20px; right: 20px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in forwards;
+      animation-delay: 0s, 2.7s;
+      max-width: 360px;
+    }
+
+    .toast--success { background: linear-gradient(135deg, #10b981, #059669); }
+    .toast--error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .toast--info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(40px); }
+    }
+
+    /* ========================================
+       Footer
+    ======================================== */
+    .footer {
+      text-align: center;
+      padding: var(--space-2xl) var(--space-base) var(--space-xl);
+      background: linear-gradient(to top, rgba(255, 107, 157, 0.05), transparent);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer__hearts { font-size: 1.5rem; margin-bottom: var(--space-md); animation: pulse 1.5s ease-in-out infinite; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    .footer__text {
+      font-family: var(--font-display);
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .footer__subtext { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+
+    /* 滚动动画 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* 响应式 */
+    @media (max-width: 480px) {
+      :root { font-size: 14px; }
+      .hero__title { font-size: 2rem; }
+      .hero-stats { gap: var(--space-md); }
+      .stat-item { min-width: 90px; padding: var(--space-sm) var(--space-md); }
+      .stat-value { font-size: var(--font-size-xl); }
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-md); }
+      .month-btn { min-width: 58px; padding: var(--space-xs) var(--space-sm); }
+      .modal { max-height: 95vh; margin: var(--space-sm); }
+      .upload-zone { padding: var(--space-xl) var(--space-md); }
+      .upload-zone__icon { font-size: 2.5rem; }
+    }
+
+    @media (min-width: 481px) and (max-width: 1023px) {
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    }
+
+    @media (min-width: 1200px) {
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    }
+
+    /* 无障碍 */
+    .month-btn:focus-visible,
+    .photo-card:focus-visible,
+    .btn:focus-visible,
+    .modal__close:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-dots"></div>
+
+  <!-- Toast 容器 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ========================================
+       🎪 Hero 头部
+  ======================================== -->
+  <header class="hero">
+    <span class="decoration decoration--cloud">☁️</span>
+    <span class="decoration decoration--star">⭐</span>
+    <span class="decoration decoration--balloon">🎈</span>
+    <span class="decoration decoration--heart">💕</span>
+
+    <div class="hero__badge"><span>✨</span><span>记录每一个珍贵瞬间</span></div>
+    <h1 class="hero__title">👶 小宝贝成长相册</h1>
+    <p class="hero__subtitle">从呱呱坠地到蹒跚学步，38个月的美好时光，每一帧都值得被珍藏 ❤️</p>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-icon">📅</span>
+        <span class="stat-value" id="totalMonths">38</span>
+        <span class="stat-label">个月份</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">📸</span>
+        <span class="stat-value" id="totalPhotos">0</span>
+        <span class="stat-label">张照片</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">💝</span>
+        <span class="stat-value">∞</span>
+        <span class="stat-label">份爱与回忆</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="rainbow-divider"></div>
+
+  <!-- ========================================
+       🔼 上传按钮
+  ======================================== -->
+  <div class="action-bar">
+
+    <button class="btn-action btn-action--upload" onclick="openUploadModal()" aria-label="上传新照片">
+      <span>📤</span><span>上传照片</span>
+    </button>
+
+    <button class="btn-action btn-action--export" onclick="exportAlbumData()" aria-label="导出数据备份">
+      <span>💾</span><span>导出数据</span>
+    </button>
+
+    <label class="btn-action btn-action--import" aria-label="导入数据">
+      <span>📂</span><span>导入数据</span>
+      <input type="file" accept=".json,application/json" onchange="importAlbumData(event)">
+    </label>
+
+  </div>
+
+  <!-- ========================================
+       📅 时间线导航
+  ======================================== -->
+  <nav class="timeline-nav" id="timelineNav">
+    <div class="container">
+      <div class="timeline-nav__title">🗓️ 快速跳转到任意月份</div>
+      <div class="timeline-scroll" id="timelineScroll"></div>
+    </div>
+  </nav>
+
+  <!-- ========================================
+       📸 相册主体内容
+  ======================================== -->
+  <main class="container" id="albumContainer">
+    <section class="album-section" id="albumSection">
+      <!-- JS 动态渲染所有月份相册 -->
+    </section>
+  </main>
+
+  <div class="rainbow-divider"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__hearts">💖 💕 💗 💝 💞</div>
+    <p class="footer__text">每一张照片都是一个故事，每一个瞬间都值得被铭记</p>
+    <p class="footer__subtext">Made with ❤️ for our little angel · 202X - Present</p>
+  </footer>
+
+  <!-- ========================================
+       📤 上传弹窗
+  ======================================== -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal" role="dialog" aria-labelledby="uploadModalTitle">
+      <div class="modal__header">
+        <h2 class="modal__title" id="uploadModalTitle">📤 上传新照片</h2>
+        <button class="modal__close" onclick="closeUploadModal()" aria-label="关闭">✕</button>
+      </div>
+      <div class="modal__body">
+        <!-- 拖拽上传区域 -->
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-zone__icon">📁</div>
+          <p class="upload-zone__text">点击或拖拽照片到这里</p>
+          <p class="upload-zone__hint">支持 JPG、PNG、WebP 格式 · 单次最多 20 张</p>
+          <input type="file"
+                 id="fileInput"
+                 accept="image/jpeg,image/png,image/webp"
+                 multiple
+                 onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- 表单选项 -->
+        <div class="upload-form">
+          <div class="form-group">
+            <label class="form-label" for="selectMonth">
+              选择月份<span class="form-label__required">*</span>
+            </label>
+            <select class="form-select" id="selectMonth">
+              <!-- JS 动态填充 -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputCaption">照片描述（可选）</label>
+            <input type="text"
+                   class="form-input"
+                   id="inputCaption"
+                   placeholder="例如：第一次翻身 · 人生大事件！"
+                   maxlength="50">
+          </div>
+        </div>
+
+        <!-- 预览区 -->
+        <div class="preview-area" id="previewArea" style="display:none;">
+          <p class="preview-area__title">🖼️ 已选择的照片 (<span id="selectedCount">0</span>)</p>
+          <div class="preview-grid" id="previewGrid"></div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" onclick="closeUploadModal()">取消</button>
+        <button class="btn btn--primary" id="btnConfirmUpload" onclick="confirmUpload()" disabled>
+          ✨ 确认添加到相册
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       💡 Lightbox
+  ======================================== -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox__content" onclick="event.stopPropagation()">
+      <button class="lightbox__close" onclick="closeLightbox(event)" aria-label="关闭">✕</button>
+      <button class="lightbox__nav lightbox__prev" onclick="navigateLightbox(-1)" aria-label="上一张">◀</button>
+      <img class="lightbox__image" id="lightboxImg" src="" alt="">
+      <button class="lightbox__nav lightbox__next" onclick="navigateLightbox(1)" aria-label="下一张">▶</button>
+      <p class="lightbox__caption" id="lightboxCaption"></p>
+    </div>
+  </div>
+
+  <!-- ========================================
+       JavaScript
+  ======================================== -->
+  <script>
+    // ============================================================
+    // 📦 数据存储（使用 localStorage）
+    // ============================================================
+    const STORAGE_KEY = 'baby_growth_album_photos';
+    const TOTAL_MONTHS = 38;
+
+    // 月份数据模板（含默认寄语）
+    const MONTH_TEMPLATES = {
+      1:  { tag: '🌅', title: '第 1 个月', subtitle: '初来乍到', desc: 'Hello World! 你好呀小天使 👼', message: '亲爱的宝贝，欢迎来到这个世界！你的第一次微笑、第一声啼哭……爸爸妈妈永远记得这一刻的感动与幸福。', author: '写给满月的你', icon: '💌', emojis: ['👶','🛏️','🤱','👀','😴'] },
+      2:  { tag: '🌱', title: '第 2 个月', subtitle: '抬头看世界', desc: '开始抬起小脑袋打量周围的一切啦', message: '第二个月的你越来越有精神了！会追着声音转头，会咯咯笑出声。每一天都在给我们新的惊喜。', author: '两个月纪念', icon: '😊', emojis: ['😊','🎵','👶','💤','🍼'] },
+      3:  { tag: '🌿', title: '第 3 个月', subtitle: '会笑啦', desc: '笑容越来越多，是个爱笑的小天使', message: '三个月啦！你学会了翻身的前奏——左右扭动。最爱的还是对着妈妈傻笑，那笑容能治愈一切不美好。', author: '三个月留念', icon: '😄', emojis: ['😄','👐','🧸','☀️','💗'] },
+      6:  { tag: '🎂', title: '第 6 个月', subtitle: '半岁啦！', desc: '会翻身啦！小小探险家出发 🚀', message: '半岁快乐我的宝贝！你已经会翻身、会咿呀说话、会对我们笑……每一天的你都在闪闪发光。', author: '半岁纪念', icon: '🎉', emojis: ['🔄','😆','👐','🍼','🧸'] },
+      9:  { tag: '🍂', title: '第 9 个月', subtitle: '爬行达人', desc: '满屋子爬来爬去，停不下来', message: '九个月的你已经是个爬行高手了！哪里都敢去，什么都想摸。家里从此进入了全面防护模式 😂', author: '九个月留念', icon: '🐢', emojis: ['🐢','🏠','🧩','🥣','👋'] },
+      12: { tag: '🎊', title: '第 12 个月', subtitle: '一周岁！', desc: '周岁生日快乐！迈出人生第一步 🎂', message: '一岁一礼，一寸欢喜！亲爱的宝贝，恭喜你完成了人生的第一个365天。愿你一生温暖纯良，不舍爱与自由。', author: '一周岁快乐', icon: '🎂', emojis: ['🎂','🚶','🍰','👨‍👩‍👧','💤'] },
+      18: { tag: '🌻', title: '第 18 个月', subtitle: '一岁半', desc: '会说好多话啦！小话痨上线', message: '一岁半的你语言爆发期来了！"妈妈""爸爸""不要"成了口头禅。虽然有时候很调皮但我们超爱你！', author: '一岁半留念', icon: '🗣️', emojis: ['🗣️','🏃','📚','🎨','🍦'] },
+      24: { tag: '🌈', title: '第 24 个月', subtitle: '两岁了！', desc: '话痨模式开启 · 小大人上线 😎', message: '两岁的你是个小话痨啦！"妈妈这是什么？""爸爸为什么要上班？"你的好奇心是最珍贵的礼物。', author: '两岁留念', icon: '🌈', emojis: ['🗣️','🎨','🏃','📚','😜'] },
+      30: { tag: '⭐', title: '第 30 个月', subtitle: '两岁半', desc: '越来越有自己的想法了', message: '两岁半的小家伙已经有自己的主意了！挑食、赖床、撒娇……但也越来越暖心，是爸爸妈妈的小棉袄。', author: '两岁半留念', icon: '⭐', emojis: ['🎒','🎮','🍔','🛁','🤗'] },
+      36: { tag: '🎉', title: '第 36 个月', subtitle: '三岁了！', desc: '三岁宝宝正式上线！', message: '三岁快乐我的宝贝！你已经是个懂事的小朋友了。感谢你选择我们做你的父母，未来我们一起加油！', author: '三岁快乐', icon: '🎂', emojis: ['🎂','🎈','🎁','👫','🌟'] },
+      38: { tag: '🌟', title: '第 38 个月', subtitle: '将近三岁', desc: '小小少年慢慢长大 🌻', message: '38个月的宝贝：你有自己的想法，有自己的喜好。有时候调皮捣蛋，但更多时候是暖心小棉袄。谢谢你选择我们。', author: '永远爱你', icon: '🌟', emojis: ['🌟','🎒','🧩','🎵','🤗'] }
+    };
+
+    // 默认里程碑标签
+    const MILESTONE_LABELS = {
+      1: '初来乍到', 6: '半岁', 12: '周岁', 18: '一岁半',
+      24: '两岁', 30: '两岁半', 36: '三岁', 38: '快三岁'
+    };
+
+    // ============================================================
+    // 📊 数据管理
+    // ============================================================
+    function loadPhotos() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch { return {}; }
+    }
+
+    function savePhotos(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function addPhotos(month, photos) {
+      const all = loadPhotos();
+      if (!all[month]) all[month] = [];
+      photos.forEach(p => all[month].push(p));
+      savePhotos(all);
+    }
+
+    function removePhoto(month, photoId) {
+      const all = loadPhotos();
+      if (all[month]) {
+        all[month] = all[month].filter(p => p.id !== photoId);
+        savePhotos(all);
+      }
+    }
+
+    function getTotalPhotoCount() {
+      const all = loadPhotos();
+      return Object.values(all).reduce((sum, arr) => sum + arr.length, 0);
+    }
+
+    // ============================================================
+    // 🎨 渲染引擎
+    // ============================================================
+    function renderAlbum() {
+      const container = document.getElementById('albumSection');
+      const allPhotos = loadPhotos();
+      let html = '';
+
+      for (let m = 1; m <= TOTAL_MONTHS; m++) {
+        const tmpl = MONTH_TEMPLATES[m] || generateDefaultTemplate(m);
+        const photos = allPhotos[m] || [];
+        
+        html += `
+          <article class="month-album" id="month-${m}">
+            <header class="album-header fade-in">
+              <div class="album-month-tag">${tmpl.tag} ${tmpl.title} · ${tmpl.subtitle}</div>
+              <h2 class="album-title">${tmpl.desc.split('·')[0]?.trim() || tmpl.title}</h2>
+              <p class="album-desc">${tmpl.desc}</p>
+            </header>
+            <div class="photo-grid">
+              ${photos.length > 0 ? '' : `
+                <div class="message-card fade-in">
+                  <div class="message-card__icon">${tmpl.icon}</div>
+                  <p class="message-card__text">${tmpl.message}</p>
+                  <p class="message-card__author">—— ${tmpl.author}</p>
+                </div>
+                <div class="empty-state fade-in">
+                  <div class="empty-state__icon">📷</div>
+                  <p class="empty-state__text">这个月还没有照片哦~<br>点击上方「上传照片」按钮添加吧！</p>
+                </div>
+              `}
+              ${photos.map((photo, idx) => renderPhotoCard(photo, idx + 1)).join('')}
+            </div>
+          </article>
+        `;
+
+        if (m < TOTAL_MONTHS) {
+          const dividers = ['🎀','🎈','⭐','🦋','🌸','🍭','🎯','🎪'];
+          const deco = dividers[(m - 1) % dividers.length];
+          html += `<div class="section-divider"><span class="section-divider-icon">${deco}</span></div>`;
+        }
+      }
+
+      container.innerHTML = html;
+
+      // 更新统计
+      document.getElementById('totalPhotos').textContent = getTotalPhotoCount();
+
+      // 重新绑定滚动动画
+      setupFadeInObserver();
+    }
+
+    function renderPhotoCard(photo, index) {
+      const isLandscape = photo.isLandscape;
+      const cornerEmojis = ['🌟','🌈','💗','✨','🌙','💡','🎀','🐾','🌸','🍀','☀️','🌈','💕','🎈','🎉'];
+      const emoji = cornerEmojis[Math.abs(hashCode(photo.id)) % cornerEmojis.length];
+
+      return `
+        <figure class="photo-card ${isLandscape ? 'photo-card--landscape' : ''} fade-in"
+                 onclick="openLightbox(this)" data-photo-id="${photo.id}">
+          <div class="photo-card__image-wrapper">
+            <img src="${photo.dataUrl}" alt="${escapeHtml(photo.caption || '成长照片')}" loading="lazy">
+            <span class="photo-card__corner-deco">${emoji}</span>
+            ${index <= 9 ? `<span class="photo-card__index">${index}</span>` : ''}
+          </div>
+          <figcaption class="photo-card__footer">
+            <p class="photo-card__caption">${escapeHtml(photo.caption || '美好的回忆')}</p>
+            <p class="photo-card__date">📅 ${photo.date || '回忆时刻'}</p>
+          </figcaption>
+        </figure>
+      `;
+    }
+
+    function generateDefaultTemplate(m) {
+      const emojis = ['📷','✨','💝','🌟','🌈','🎈'];
+      return {
+        tag: '📸', title: `第 ${m} 个月`, subtitle: `${m}月龄`,
+        desc: `${m}个月大的宝贝，每天都在成长`,
+        message: `第${m}个月的宝贝又有了新的变化！每一天的成长都值得记录和珍藏。`,
+        author: `${m}个月留念`, icon: emojis[m % emojis.length],
+        emojis: []
+      };
+    }
+
+    function hashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return hash;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ============================================================
+    // 📅 时间线导航
+    // ============================================================
+    function initTimelineNav() {
+      const scroll = document.getElementById('timelineScroll');
+      let html = '';
+      for (let i = 1; i <= TOTAL_MONTHS; i++) {
+        const label = MILESTONE_LABELS[i] || `${i}月`;
+        html += `
+          <a href="#month-${i}" class="month-btn" data-month="${i}" onclick="scrollToMonth(${i}, event)">
+            <span class="month-btn__num">${i}</span>
+            <span class="month-btn__label">${label}</span>
+          </a>`;
+      }
+      scroll.innerHTML = html;
+    }
+
+    function scrollToMonth(m, e) {
+      if (e) e.preventDefault();
+      const target = document.getElementById(`month-${m}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        updateActiveMonth(m);
+      }
+    }
+
+    function updateActiveMonth(activeMonth) {
+      document.querySelectorAll('.month-btn').forEach(btn =>
+        btn.classList.toggle('active', parseInt(btn.dataset.month) === activeMonth)
+      );
+    }
+
+    function setupScrollListener() {
+      const nav = document.getElementById('timelineNav');
+      const albums = document.querySelectorAll('.month-album');
+
+      window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 100);
+        let current = 1;
+        albums.forEach(a => {
+          if (a.getBoundingClientRect().top <= window.innerHeight / 3)
+            current = parseInt(a.id.replace('month-', ''));
+        });
+        updateActiveMonth(current);
+      }, { passive: true });
+    }
+
+    function setupFadeInObserver() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }
+
+    // ============================================================
+    // 📤 上传功能
+    // ============================================================
+    let pendingFiles = [];
+
+    function openUploadModal() {
+      document.getElementById('uploadModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      initUploadForm();
+    }
+
+    function closeUploadModal() {
+      document.getElementById('uploadModal').classList.remove('active');
+      document.body.style.overflow = '';
+      resetUploadForm();
+    }
+
+    function initUploadForm() {
+      // 填充月份下拉
+      const select = document.getElementById('selectMonth');
+      select.innerHTML = '';
+      for (let i = 1; i <= TOTAL_MONTHS; i++) {
+        const tmpl = MONTH_TEMPLATES[i] || null;
+        const label = tmpl ? `${i} - ${tmpl.subtitle}` : `${i}月`;
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = label;
+        select.appendChild(opt);
+      }
+
+      setupDragDrop();
+    }
+
+    function resetUploadForm() {
+      pendingFiles = [];
+      document.getElementById('fileInput').value = '';
+      document.getElementById('inputCaption').value = '';
+      document.getElementById('previewArea').style.display = 'none';
+      document.getElementById('previewGrid').innerHTML = '';
+      document.getElementById('btnConfirmUpload').disabled = true;
+      document.getElementById('selectedCount').textContent = '0';
+    }
+
+    // 拖拽上传
+    function setupDragDrop() {
+      const zone = document.getElementById('uploadZone');
+
+      ['dragenter', 'dragover'].forEach(evt =>
+        zone.addEventListener(evt, (e) => { e.preventDefault(); zone.classList.add('dragover'); })
+      );
+
+      ['dragleave', 'drop'].forEach(evt =>
+        zone.addEventListener(evt, (e) => { e.preventDefault(); zone.classList.remove('dragover'); })
+      );
+
+      zone.addEventListener('drop', (e) => {
+        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+        if (files.length > 0) processFiles(files);
+      });
+    }
+
+    function handleFileSelect(e) {
+      const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+      if (files.length > 0) processFiles(files);
+    }
+
+    function processFiles(files) {
+      files.forEach(file => {
+        if (pendingFiles.length >= 20) {
+          showToast('最多只能一次上传20张哦~', 'error');
+          return;
+        }
+        if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
+          showToast(`不支持 "${file.name}" 的格式`, 'error');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            pendingFiles.push({
+              file: file,
+              name: file.name,
+              dataUrl: e.target.result,
+              isLandscape: img.width > img.height,
+              size: `${(file.size / 1024 / 1024).toFixed(1)}MB`
+            });
+            renderPreview();
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      showToast(`已选择 ${Math.min(files.length, 20)} 张照片`, 'info');
+    }
+
+    function renderPreview() {
+      const area = document.getElementById('previewArea');
+      const grid = document.getElementById('previewGrid');
+
+      if (pendingFiles.length === 0) {
+        area.style.display = 'none';
+        document.getElementById('btnConfirmUpload').disabled = true;
+        return;
+      }
+
+      area.style.display = 'block';
+      document.getElementById('btnConfirmUpload').disabled = false;
+      document.getElementById('selectedCount').textContent = pendingFiles.length;
+
+      grid.innerHTML = pendingFiles.map((f, i) => `
+        <div class="preview-item">
+          <img src="${f.dataUrl}" alt="${f.name}">
+          <button class="preview-item__remove" onclick="removePreviewFile(${i})" title="移除">✕</button>
+          <div class="preview-item__name">${f.name.length > 12 ? f.name.slice(0, 10) + '..' : f.name}</div>
+        </div>
+      `).join('');
+    }
+
+    function removePreviewFile(index) {
+      pendingFiles.splice(index, 1);
+      renderPreview();
+    }
+
+    function confirmUpload() {
+      if (pendingFiles.length === 0) return;
+
+      const month = parseInt(document.getElementById('selectMonth').value);
+      const caption = document.getElementById('inputCaption').value.trim();
+
+      const photos = pendingFiles.map((f, i) => ({
+        id: `photo_${Date.now()}_${i}_${Math.random().toString(36).slice(2, 8)}`,
+        dataUrl: f.dataUrl,
+        caption: caption || f.name.replace(/\.[^.]+$/, ''),
+        date: new Date().toLocaleDateString('zh-CN'),
+        isLandscape: f.isLandscape,
+        originalName: f.name
+      }));
+
+      addPhotos(month, photos);
+
+      showToast(`✅ 成功添加 ${photos.length} 张照片到「第${month}个月」相册！`, 'success');
+
+      closeUploadModal();
+      renderAlbum();
+
+      // 自动滚动到对应月份
+      setTimeout(() => scrollToMonth(month), 300);
+    }
+
+    // ============================================================
+     // Toast 提示
+    // ============================================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+
+      const toast = document.createElement('div');
+      toast.className = `toast toast--${type}`;
+      toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ============================================================
+    // 💡 Lightbox
+    // ============================================================
+    let currentLightboxIndex = 0;
+    let allPhotos = [];
+
+    function collectAllPhotos() {
+      allPhotos = Array.from(document.querySelectorAll('.photo-card')).map(card => ({
+        img: card.querySelector('img'),
+        caption: card.querySelector('.photo-card__caption')?.textContent || ''
+      }));
+    }
+
+    function openLightbox(card) {
+      collectAllPhotos();
+      const img = card.querySelector('img');
+      currentLightboxIndex = allPhotos.findIndex(p => p.img === img);
+      showLightboxContent();
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(dir) {
+      currentLightboxIndex += dir;
+      if (currentLightboxIndex < 0) currentLightboxIndex = allPhotos.length - 1;
+      if (currentLightboxIndex >= allPhotos.length) currentLightboxIndex = 0;
+      showLightboxContent();
+    }
+
+    function showLightboxContent() {
+      const p = allPhotos[currentLightboxIndex];
+      if (!p) return;
+      document.getElementById('lightboxImg').src = p.img.src;
+      document.getElementById('lightboxCaption').textContent = p.caption;
+    }
+
+    // 键盘支持
+    document.addEventListener('keydown', (e) => {
+      const lb = document.getElementById('lightbox');
+      if (!lb.classList.contains('active')) return;
+      switch(e.key) {
+        case 'Escape': closeLightbox({ target: lb }); break;
+        case 'ArrowLeft': navigateLightbox(-1); break;
+        case 'ArrowRight': navigateLightbox(1); break;
+      }
+    });
+
+    // ESC 关闭上传弹窗
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('uploadModal').classList.contains('active')) {
+        closeUploadModal();
+      }
+    });
+
+    // 点击遮罩关闭弹窗
+    document.getElementById('uploadModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('uploadModal')) closeUploadModal();
+    });
+
+    // ============================================================
+    // 💾 导出 / 📂 导入 数据功能
+    // ============================================================
+
+    // 导出：把所有照片数据打包下载为 JSON 文件
+    function exportAlbumData() {
+      const allPhotos = loadPhotos();
+      const total = getTotalPhotoCount();
+
+      if (total === 0) {
+        showToast('还没有任何照片哦，先上传几张吧~', 'info');
+        return;
+      }
+
+      const exportData = {
+        version: '1.0',
+        exportDate: new Date().toISOString(),
+        photoCount: total,
+        monthCount: Object.keys(allPhotos).length,
+        data: allPhotos
+      };
+
+      const jsonStr = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `成长相册备份_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast(`✅ 已导出 ${total} 张照片的数据！记得 git push 到 GitHub 哦~`, 'success');
+    }
+
+    // 导入：从 JSON 文件恢复照片数据
+    function importAlbumData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importData = JSON.parse(e.target.result);
+
+          if (!importData.data || typeof importData.data !== 'object') {
+            throw new Error('无效的相册数据文件');
+          }
+
+          const count = Object.values(importData.data).reduce((sum, arr) => sum + arr.length, 0);
+
+          // 确认导入
+          if (!confirm(`即将导入 ${count} 张照片数据，会与现有数据合并。\n\n确定要继续吗？`)) {
+            return;
+          }
+
+          // 合并数据
+          const existing = loadPhotos();
+          for (const month in importData.data) {
+            if (!existing[month]) existing[month] = [];
+            // 去重（按 id）
+            const existingIds = new Set(existing[month].map(p => p.id));
+            importData.data[month].forEach(p => {
+              if (!existingIds.has(p.id)) {
+                existing[month].push(p);
+              }
+            });
+          }
+
+          savePhotos(existing);
+          renderAlbum();
+
+          showToast(`✅ 成功导入 ${count} 张照片！`, 'success');
+
+        } catch (err) {
+          showToast('❌ 导入失败：不是有效的相册备份文件', 'error');
+          console.error('Import error:', err);
+        }
+      };
+
+      reader.readAsText(file);
+
+      // 重置 input，允许重复选择同一文件
+      event.target.value = '';
+    }
+
+    // ============================================================
+    // 🚀 初始化
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      initTimelineNav();
+      setupScrollListener();
+      renderAlbum();
+    });
+  </script>
+</body>
+</html>
