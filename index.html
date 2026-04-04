@@ -480,6 +480,54 @@
       letter-spacing: 0.02em;
     }
 
+    .timeline-nav__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .timeline-nav__controls {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .btn-filter {
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      border: 1px dashed var(--color-primary-200);
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--color-primary-700);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      box-shadow: var(--shadow-xs);
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-filter:hover {
+      background: linear-gradient(135deg, var(--color-primary-50), var(--color-secondary-50));
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .btn-filter--active {
+      border-style: solid;
+      border-color: var(--color-primary-400);
+      background: linear-gradient(135deg, var(--color-primary-100), var(--color-secondary-100));
+      box-shadow: var(--shadow-md);
+      color: var(--color-primary-700);
+    }
+
     .timeline-scroll {
       display: flex;
       gap: var(--space-3);
@@ -862,6 +910,12 @@
 
     .form-group { margin-bottom: var(--space-lg); }
 
+    .form-help {
+      margin-top: var(--space-xs);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+    }
+
     .form-label {
       display: block;
       font-weight: 500;
@@ -885,6 +939,21 @@
       transition: all var(--transition-fast);
       appearance: none;
       -webkit-appearance: none;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: var(--space-md);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-base);
+      font-family: var(--font-body);
+      background: var(--color-bg-card);
+      color: var(--color-text-primary);
+      transition: all var(--transition-fast);
+      min-height: 96px;
+      line-height: var(--line-height-relaxed);
+      resize: vertical;
     }
 
     .form-select:focus,
@@ -1032,6 +1101,42 @@
     .album-header {
       text-align: center;
       margin-bottom: var(--space-12);
+    }
+
+    .album-header__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-3);
+    }
+
+    .album-header__title-group {
+      text-align: left;
+    }
+
+    .album-header__upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      border: 1px dashed var(--color-primary-200);
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--color-primary-700);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      box-shadow: var(--shadow-xs);
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .album-header__upload-btn:hover {
+      background: linear-gradient(135deg, var(--color-primary-50), var(--color-secondary-50));
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
     }
 
     .album-month-tag {
@@ -1408,6 +1513,14 @@
     .month-album { scroll-margin-top: 120px; padding-bottom: var(--space-2xl); }
     .month-album:last-child { padding-bottom: 0; }
 
+    body.mode-only-has-photos .month-album--empty {
+      display: none;
+    }
+
+    body.mode-only-has-photos .section-divider {
+      display: none;
+    }
+
     /* 空状态提示 */
     .empty-state {
       grid-column: 1 / -1;
@@ -1506,6 +1619,25 @@
       font-size: var(--font-size-lg);
       font-weight: var(--font-weight-medium);
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .lightbox__meta {
+      text-align: center;
+      margin-top: var(--space-2);
+      color: rgba(255, 255, 255, 0.75);
+      font-size: var(--font-size-sm);
+    }
+
+    .lightbox__story {
+      margin-top: var(--space-3);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--color-text-light);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-relaxed);
+      text-align: left;
+      white-space: pre-wrap;
     }
 
     .lightbox__nav {
@@ -1798,6 +1930,10 @@
       <span>📤</span><span>同步到文件</span>
     </button>
 
+    <button class="btn-action btn-action--config" onclick="openConfigModal()" aria-label="配置月份数量与文案">
+      <span>🧩</span><span>配置月份 & 文案</span>
+    </button>
+
     <button class="btn-action btn-action--export" onclick="exportAlbumData()" aria-label="导出数据备份">
       <span>💾</span><span>导出数据</span>
     </button>
@@ -1814,7 +1950,14 @@
   ======================================== -->
   <nav class="timeline-nav" id="timelineNav">
     <div class="container">
-      <div class="timeline-nav__title">🗓️ 快速跳转到任意月份</div>
+      <div class="timeline-nav__top">
+        <div class="timeline-nav__title">🗓️ 快速跳转到任意月份</div>
+        <div class="timeline-nav__controls">
+          <button type="button" class="btn-filter" id="toggleHasPhotosBtn" onclick="toggleOnlyHasPhotos()">
+            <span>📸</span><span>只看有照片的月份</span>
+          </button>
+        </div>
+      </div>
       <div class="timeline-scroll" id="timelineScroll"></div>
     </div>
   </nav>
@@ -1878,6 +2021,16 @@
                    placeholder="例如：第一次翻身 · 人生大事件！"
                    maxlength="50">
           </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputStory">这一刻的故事（可选）</label>
+            <textarea
+              class="form-textarea"
+              id="inputStory"
+              placeholder="可以写一写这张照片背后的有趣故事、孩子的小细节、当时的心情……"
+              rows="4"
+              maxlength="800"></textarea>
+          </div>
         </div>
 
         <!-- 预览区 -->
@@ -1891,6 +2044,76 @@
         <button class="btn btn--primary" id="btnConfirmUpload" onclick="confirmUpload()" disabled>
           ✨ 确认添加到相册
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       🧩 相册配置弹窗（月数 & 文案）
+  ======================================== -->
+  <div class="modal-overlay" id="configModal">
+    <div class="modal" role="dialog" aria-labelledby="configModalTitle">
+      <div class="modal__header">
+        <h2 class="modal__title" id="configModalTitle">🧩 相册配置（月份 & 文案）</h2>
+        <button class="modal__close" onclick="closeConfigModal()" aria-label="关闭">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="upload-form">
+          <div class="form-group">
+            <label class="form-label" for="configTotalMonths">展示的总月份数</label>
+            <input type="number"
+                   class="form-input"
+                   id="configTotalMonths"
+                   min="1"
+                   max="120"
+                   placeholder="例如：38">
+            <p class="form-help">建议 12 ~ 60 之间，最大支持 120 个月。</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="configMonthSelect">选择要编辑的月份</label>
+            <select class="form-select" id="configMonthSelect" onchange="onConfigMonthChange()">
+              <!-- JS 动态填充 -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="configSubtitle">小标题 / 里程碑文案</label>
+            <input type="text"
+                   class="form-input"
+                   id="configSubtitle"
+                   placeholder="例如：会笑啦 / 半岁啦">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="configDesc">顶部一句话描述</label>
+            <input type="text"
+                   class="form-input"
+                   id="configDesc"
+                   placeholder="例如：笑容越来越多，是个爱笑的小天使">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="configMessage">空状态寄语文案</label>
+            <textarea
+              class="form-textarea"
+              id="configMessage"
+              rows="3"
+              placeholder="例如：第3个月的宝贝又有了新的变化！每一天的成长都值得记录和珍藏。"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="configAuthor">寄语署名（可选）</label>
+            <input type="text"
+                   class="form-input"
+                   id="configAuthor"
+                   placeholder="例如：三个月留念 / 永远爱你">
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" type="button" onclick="resetCurrentMonthConfig()">恢复默认文案</button>
+        <button class="btn btn--primary" type="button" onclick="saveConfigAndClose()">保存配置并关闭</button>
       </div>
     </div>
   </div>
@@ -1924,6 +2147,15 @@
                  placeholder="例如：2024-01-15 或 今天"
                  maxlength="20">
         </div>
+        <div class="form-group">
+          <label class="form-label" for="editStory">这一刻的故事</label>
+          <textarea
+            class="form-textarea"
+            id="editStory"
+            placeholder="可以补充这一张照片背后的详细故事、当时的对话、孩子的反应等等~"
+            rows="5"
+            maxlength="800"></textarea>
+        </div>
       </div>
       <div class="edit-panel__footer">
         <button class="btn btn--secondary" onclick="closeEditPanel(event)">取消</button>
@@ -1942,6 +2174,8 @@
       <img class="lightbox__image" id="lightboxImg" src="" alt="">
       <button class="lightbox__nav lightbox__next" onclick="navigateLightbox(1)" aria-label="下一张">▶</button>
       <p class="lightbox__caption" id="lightboxCaption"></p>
+      <p class="lightbox__meta" id="lightboxMeta"></p>
+      <div class="lightbox__story" id="lightboxStory" style="display:none;"></div>
     </div>
   </div>
 
@@ -1989,12 +2223,124 @@
       24: '两岁', 30: '两岁半', 36: '三岁', 38: '快三岁'
     };
 
+    // 相册配置（支持自定义总月份数 & 每月文案）
+    const CONFIG_STORAGE_KEY = 'GROWTH_ALBUM_CONFIG_V1';
+    let albumConfigCache = null;
+
+    function getDefaultAlbumConfig() {
+      return {
+        totalMonths: TOTAL_MONTHS,
+        monthTemplates: {}
+      };
+    }
+
+    function getAlbumConfig() {
+      if (albumConfigCache) return albumConfigCache;
+      try {
+        const raw = localStorage.getItem(CONFIG_STORAGE_KEY);
+        if (!raw) {
+          albumConfigCache = getDefaultAlbumConfig();
+        } else {
+          const parsed = JSON.parse(raw);
+          albumConfigCache = {
+            totalMonths: Number.isInteger(parsed.totalMonths) ? parsed.totalMonths : TOTAL_MONTHS,
+            monthTemplates: parsed.monthTemplates && typeof parsed.monthTemplates === 'object' ? parsed.monthTemplates : {}
+          };
+        }
+      } catch (e) {
+        console.warn('读取相册配置失败，将使用默认配置', e);
+        albumConfigCache = getDefaultAlbumConfig();
+      }
+      return albumConfigCache;
+    }
+
+    function saveAlbumConfig(config) {
+      albumConfigCache = config;
+      try {
+        localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
+      } catch (e) {
+        console.warn('保存相册配置失败', e);
+      }
+    }
+
+    function getCurrentTotalMonths() {
+      const config = getAlbumConfig();
+      const raw = parseInt(config.totalMonths, 10);
+      if (!Number.isFinite(raw) || raw < 1) return TOTAL_MONTHS;
+      // 限制一个上限，避免一次渲染过多月份
+      return Math.min(raw, 120);
+    }
+
+    function getMonthTemplate(month) {
+      const m = parseInt(month, 10);
+      const base = MONTH_TEMPLATES[m] || generateDefaultTemplate(m);
+      const config = getAlbumConfig();
+      const overrides = (config.monthTemplates && config.monthTemplates[m]) || {};
+      return Object.assign({}, base, overrides);
+    }
+
+    function updateTotalMonths(newTotal) {
+      const config = getAlbumConfig();
+      const n = parseInt(newTotal, 10);
+      if (!Number.isFinite(n) || n < 1) return;
+      config.totalMonths = Math.min(120, n);
+      saveAlbumConfig(config);
+    }
+
+    function updateMonthTemplateConfig(month, partial) {
+      const m = parseInt(month, 10);
+      if (!Number.isFinite(m) || m < 1) return;
+      const config = getAlbumConfig();
+      if (!config.monthTemplates) config.monthTemplates = {};
+      const existing = config.monthTemplates[m] || {};
+      config.monthTemplates[m] = Object.assign({}, existing, partial);
+      saveAlbumConfig(config);
+
+      // 同时更新运行时模板，方便同步导出
+      const merged = getMonthTemplate(m);
+      MONTH_TEMPLATES[m] = merged;
+    }
+
+    function resetMonthTemplateConfig(month) {
+      const m = parseInt(month, 10);
+      if (!Number.isFinite(m) || m < 1) return;
+      const config = getAlbumConfig();
+      if (config.monthTemplates && config.monthTemplates[m]) {
+        delete config.monthTemplates[m];
+        saveAlbumConfig(config);
+      }
+      // 恢复 MONTH_TEMPLATES 为默认值（如果没有预设模板则使用 generateDefaultTemplate）
+      if (MONTH_TEMPLATES[m]) {
+        delete MONTH_TEMPLATES[m];
+      }
+    }
+
+    function applyConfigToRuntime() {
+      const totalMonths = getCurrentTotalMonths();
+      const totalMonthsEl = document.getElementById('totalMonths');
+      if (totalMonthsEl) {
+        totalMonthsEl.textContent = totalMonths;
+      }
+
+      const config = getAlbumConfig();
+      if (config.monthTemplates) {
+        Object.keys(config.monthTemplates).forEach((key) => {
+          const m = parseInt(key, 10);
+          if (!Number.isFinite(m) || m < 1) return;
+          const merged = getMonthTemplate(m);
+          MONTH_TEMPLATES[m] = merged;
+        });
+      }
+    }
+
     // ============================================================
     // 📊 数据管理（双模式：内嵌数据 + localStorage 缓存）
     // ============================================================
 
     // 标记数据是否有未保存的变更
     let hasUnsavedChanges = false;
+    // 是否只展示有照片的月份
+    let onlyShowMonthsWithPhotos = false;
 
     function loadPhotos() {
       try {
@@ -2035,6 +2381,26 @@
         '$1' + dataStr + '\n$2'
       );
 
+      // 同步当前配置（总月份数 + 月份文案）到代码中
+      const totalMonthsForExport = getCurrentTotalMonths();
+      const templatesForExport = {};
+      for (let m = 1; m <= totalMonthsForExport; m++) {
+        templatesForExport[m] = getMonthTemplate(m);
+      }
+
+      // 更新 TOTAL_MONTHS 常量
+      html = html.replace(
+        /const TOTAL_MONTHS\s*=\s*\d+\s*;/,
+        `const TOTAL_MONTHS = ${totalMonthsForExport};`
+      );
+
+      // 更新 MONTH_TEMPLATES 配置
+      const templatesStr = JSON.stringify(templatesForExport, null, 2);
+      html = html.replace(
+        /const MONTH_TEMPLATES\s*=\s*\{[\s\S]*?\};/,
+        'const MONTH_TEMPLATES = ' + templatesStr + ';'
+      );
+
       const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
 
@@ -2057,7 +2423,7 @@
       if (btn) {
         if (hasUnsavedChanges) {
           btn.classList.add('btn-action--sync--pending');
-          btn.innerHTML = '<span>📤</span><span>同步到文件</span>';
+          btn.innerHTML = '<span>📤</span><span>同步到文件（有更新）</span>';
         } else {
           btn.classList.remove('btn-action--sync--pending');
           btn.innerHTML = '<span>📤</span><span>同步到文件</span>';
@@ -2092,16 +2458,24 @@
       const container = document.getElementById('albumSection');
       const allPhotos = loadPhotos();
       let html = '';
+      const totalMonths = getCurrentTotalMonths();
 
-      for (let m = 1; m <= TOTAL_MONTHS; m++) {
-        const tmpl = MONTH_TEMPLATES[m] || generateDefaultTemplate(m);
+      for (let m = 1; m <= totalMonths; m++) {
+        const tmpl = getMonthTemplate(m);
         const photos = allPhotos[m] || [];
         
         html += `
-          <article class="month-album" id="month-${m}">
+          <article class="month-album ${photos.length === 0 ? 'month-album--empty' : ''}" id="month-${m}">
             <header class="album-header fade-in">
-              <div class="album-month-tag">${tmpl.tag} ${tmpl.title} · ${tmpl.subtitle}</div>
-              <h2 class="album-title">${tmpl.desc.split('·')[0]?.trim() || tmpl.title}</h2>
+              <div class="album-header__top">
+                <div class="album-header__title-group">
+                  <div class="album-month-tag">${tmpl.tag} ${tmpl.title} · ${tmpl.subtitle}</div>
+                  <h2 class="album-title">${tmpl.desc.split('·')[0]?.trim() || tmpl.title}</h2>
+                </div>
+                <button type="button" class="album-header__upload-btn" onclick="openUploadModal(${m})">
+                  <span>➕</span><span>添加照片</span>
+                </button>
+              </div>
               <p class="album-desc">${tmpl.desc}</p>
             </header>
             <div class="photo-grid">
@@ -2125,7 +2499,7 @@
           </article>
         `;
 
-        if (m < TOTAL_MONTHS) {
+        if (m < totalMonths) {
           const dividers = ['🎀','🎈','⭐','🦋','🌸','🍭','🎯','🎪'];
           const deco = dividers[(m - 1) % dividers.length];
           html += `<div class="section-divider"><span class="section-divider-icon">${deco}</span></div>`;
@@ -2148,7 +2522,7 @@
 
       return `
         <figure class="photo-card ${isLandscape ? 'photo-card--landscape' : ''} fade-in"
-                 data-photo-id="${photo.id}" data-month="${photo.month || ''}">
+                 data-photo-id="${photo.id}" data-month="${photo.month || ''}" onclick="openLightbox(this)">
           <div class="photo-card__image-wrapper">
             <img src="${photo.dataUrl}" alt="${escapeHtml(photo.caption || '成长照片')}" loading="lazy">
             <span class="photo-card__corner-deco">${emoji}</span>
@@ -2163,7 +2537,7 @@
                       title="删除照片">🗑️</button>
             </div>
           </div>
-          <figcaption class="photo-card__footer" onclick="openLightbox(this.closest('.photo-card'))">
+          <figcaption class="photo-card__footer">
             <p class="photo-card__caption">${escapeHtml(photo.caption || '美好的回忆')}</p>
             <p class="photo-card__date">📅 ${photo.date || '回忆时刻'}</p>
           </figcaption>
@@ -2203,7 +2577,8 @@
     function initTimelineNav() {
       const scroll = document.getElementById('timelineScroll');
       let html = '';
-      for (let i = 1; i <= TOTAL_MONTHS; i++) {
+      const totalMonths = getCurrentTotalMonths();
+      for (let i = 1; i <= totalMonths; i++) {
         const label = MILESTONE_LABELS[i] || `${i}月`;
         html += `
           <a href="#month-${i}" class="month-btn" data-month="${i}" onclick="scrollToMonth(${i}, event)">
@@ -2217,9 +2592,40 @@
     function scrollToMonth(m, e) {
       if (e) e.preventDefault();
       const target = document.getElementById(`month-${m}`);
-      if (target) {
+      if (!target) return;
+
+      const isHiddenByFilter = onlyShowMonthsWithPhotos && target.classList.contains('month-album--empty');
+
+      if (isHiddenByFilter) {
+        setOnlyHasPhotosMode(false);
+        showToast('已切换为查看全部月份，方便你跳转到这个月份~', 'info');
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 60);
+      } else {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        updateActiveMonth(m);
+      }
+      updateActiveMonth(m);
+    }
+
+    function setOnlyHasPhotosMode(enabled) {
+      onlyShowMonthsWithPhotos = enabled;
+      document.body.classList.toggle('mode-only-has-photos', enabled);
+      const btn = document.getElementById('toggleHasPhotosBtn');
+      if (btn) {
+        btn.classList.toggle('btn-filter--active', enabled);
+        btn.innerHTML = enabled
+          ? '<span>📅</span><span>查看全部月份</span>'
+          : '<span>📸</span><span>只看有照片的月份</span>';
+      }
+    }
+
+    function toggleOnlyHasPhotos() {
+      setOnlyHasPhotosMode(!onlyShowMonthsWithPhotos);
+      if (onlyShowMonthsWithPhotos) {
+        showToast('已开启「只看有照片的月份」模式~', 'info');
+      } else {
+        showToast('已切换为查看全部月份', 'info');
       }
     }
 
@@ -2237,6 +2643,7 @@
         nav.classList.toggle('scrolled', window.scrollY > 100);
         let current = 1;
         albums.forEach(a => {
+          if (a.offsetParent === null) return;
           if (a.getBoundingClientRect().top <= window.innerHeight / 3)
             current = parseInt(a.id.replace('month-', ''));
         });
@@ -2255,14 +2662,129 @@
     }
 
     // ============================================================
+    // 🧩 相册配置弹窗
+    // ============================================================
+    function openConfigModal() {
+      const overlay = document.getElementById('configModal');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      const totalMonthsInput = document.getElementById('configTotalMonths');
+      if (totalMonthsInput) {
+        totalMonthsInput.value = getCurrentTotalMonths();
+      }
+
+      populateConfigMonthSelect();
+      const selectEl = document.getElementById('configMonthSelect');
+      const initialMonth = parseInt(selectEl?.value || '1', 10) || 1;
+      fillConfigFieldsFromTemplate(initialMonth);
+    }
+
+    function closeConfigModal() {
+      const overlay = document.getElementById('configModal');
+      if (!overlay) return;
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function populateConfigMonthSelect() {
+      const select = document.getElementById('configMonthSelect');
+      if (!select) return;
+      const total = getCurrentTotalMonths();
+      select.innerHTML = '';
+      for (let i = 1; i <= total; i++) {
+        const tmpl = getMonthTemplate(i);
+        const option = document.createElement('option');
+        option.value = i;
+        const label = tmpl && tmpl.subtitle ? `${i} - ${tmpl.subtitle}` : `第 ${i} 个月`;
+        option.textContent = label;
+        select.appendChild(option);
+      }
+      if (!select.value && total >= 1) {
+        select.value = '1';
+      }
+    }
+
+    function onConfigMonthChange() {
+      const select = document.getElementById('configMonthSelect');
+      if (!select) return;
+      fillConfigFieldsFromTemplate(select.value);
+    }
+
+    function fillConfigFieldsFromTemplate(month) {
+      const m = parseInt(month, 10) || 1;
+      const tmpl = getMonthTemplate(m);
+      const subtitleInput = document.getElementById('configSubtitle');
+      const descInput = document.getElementById('configDesc');
+      const msgInput = document.getElementById('configMessage');
+      const authorInput = document.getElementById('configAuthor');
+
+      if (subtitleInput) subtitleInput.value = tmpl.subtitle || '';
+      if (descInput) descInput.value = tmpl.desc || '';
+      if (msgInput) msgInput.value = tmpl.message || '';
+      if (authorInput) authorInput.value = tmpl.author || '';
+    }
+
+    function saveCurrentMonthConfig() {
+      const monthSelect = document.getElementById('configMonthSelect');
+      if (!monthSelect) return;
+      const m = parseInt(monthSelect.value, 10);
+      if (!Number.isFinite(m) || m < 1) return;
+
+      const subtitle = (document.getElementById('configSubtitle')?.value || '').trim();
+      const desc = (document.getElementById('configDesc')?.value || '').trim();
+      const message = (document.getElementById('configMessage')?.value || '').trim();
+      const author = (document.getElementById('configAuthor')?.value || '').trim();
+
+      updateMonthTemplateConfig(m, { subtitle, desc, message, author });
+      applyConfigToRuntime();
+      initTimelineNav();
+      renderAlbum();
+
+      showToast(`已保存第 ${m} 个月的文案配置~`, 'success');
+    }
+
+    function resetCurrentMonthConfig() {
+      const monthSelect = document.getElementById('configMonthSelect');
+      if (!monthSelect) return;
+      const m = parseInt(monthSelect.value, 10);
+      if (!Number.isFinite(m) || m < 1) return;
+
+      if (!confirm(`确定要恢复第 ${m} 个月的默认文案吗？`)) return;
+
+      resetMonthTemplateConfig(m);
+      applyConfigToRuntime();
+      initTimelineNav();
+      renderAlbum();
+      fillConfigFieldsFromTemplate(m);
+
+      showToast(`已恢复第 ${m} 个月的默认文案`, 'info');
+    }
+
+    function saveConfigAndClose() {
+      const totalMonthsInput = document.getElementById('configTotalMonths');
+      if (totalMonthsInput) {
+        updateTotalMonths(totalMonthsInput.value);
+      }
+
+      applyConfigToRuntime();
+      initTimelineNav();
+      renderAlbum();
+
+      showToast('已更新相册配置~', 'success');
+      closeConfigModal();
+    }
+
+    // ============================================================
     // 📤 上传功能
     // ============================================================
     let pendingFiles = [];
 
-    function openUploadModal() {
+    function openUploadModal(defaultMonth) {
       document.getElementById('uploadModal').classList.add('active');
       document.body.style.overflow = 'hidden';
-      initUploadForm();
+      initUploadForm(defaultMonth);
     }
 
     function closeUploadModal() {
@@ -2271,17 +2793,22 @@
       resetUploadForm();
     }
 
-    function initUploadForm() {
+    function initUploadForm(defaultMonth) {
       // 填充月份下拉
       const select = document.getElementById('selectMonth');
       select.innerHTML = '';
-      for (let i = 1; i <= TOTAL_MONTHS; i++) {
-        const tmpl = MONTH_TEMPLATES[i] || null;
-        const label = tmpl ? `${i} - ${tmpl.subtitle}` : `${i}月`;
+      const totalMonths = getCurrentTotalMonths();
+      for (let i = 1; i <= totalMonths; i++) {
+        const tmpl = getMonthTemplate(i);
+        const label = tmpl && tmpl.subtitle ? `${i} - ${tmpl.subtitle}` : `${i}月`;
         const opt = document.createElement('option');
         opt.value = i;
         opt.textContent = label;
         select.appendChild(opt);
+      }
+
+      if (typeof defaultMonth === 'number' && defaultMonth >= 1 && defaultMonth <= totalMonths) {
+        select.value = String(defaultMonth);
       }
 
       setupDragDrop();
@@ -2291,6 +2818,8 @@
       pendingFiles = [];
       document.getElementById('fileInput').value = '';
       document.getElementById('inputCaption').value = '';
+      const storyInput = document.getElementById('inputStory');
+      if (storyInput) storyInput.value = '';
       document.getElementById('previewArea').style.display = 'none';
       document.getElementById('previewGrid').innerHTML = '';
       document.getElementById('btnConfirmUpload').disabled = true;
@@ -2385,6 +2914,7 @@
 
       const month = parseInt(document.getElementById('selectMonth').value);
       const caption = document.getElementById('inputCaption').value.trim();
+      const story = (document.getElementById('inputStory')?.value || '').trim();
 
       const photos = pendingFiles.map((f, i) => ({
         id: `photo_${Date.now()}_${i}_${Math.random().toString(36).slice(2, 8)}`,
@@ -2392,7 +2922,8 @@
         caption: caption || f.name.replace(/\.[^.]+$/, ''),
         date: new Date().toLocaleDateString('zh-CN'),
         isLandscape: f.isLandscape,
-        originalName: f.name
+        originalName: f.name,
+        story: story || ''
       }));
 
       addPhotos(month, photos);
@@ -2430,7 +2961,9 @@
     function collectAllPhotos() {
       allPhotos = Array.from(document.querySelectorAll('.photo-card')).map(card => ({
         img: card.querySelector('img'),
-        caption: card.querySelector('.photo-card__caption')?.textContent || ''
+        caption: card.querySelector('.photo-card__caption')?.textContent || '',
+        id: card.dataset.photoId || card.getAttribute('data-photo-id'),
+        month: card.dataset.month || card.getAttribute('data-month')
       }));
     }
 
@@ -2459,8 +2992,55 @@
     function showLightboxContent() {
       const p = allPhotos[currentLightboxIndex];
       if (!p) return;
-      document.getElementById('lightboxImg').src = p.img.src;
-      document.getElementById('lightboxCaption').textContent = p.caption;
+
+      const imgEl = document.getElementById('lightboxImg');
+      const captionEl = document.getElementById('lightboxCaption');
+      const storyEl = document.getElementById('lightboxStory');
+      const metaEl = document.getElementById('lightboxMeta');
+
+      if (imgEl && p.img) {
+        imgEl.src = p.img.src;
+      }
+      if (captionEl) {
+        captionEl.textContent = p.caption || '';
+      }
+      if (metaEl) {
+        metaEl.textContent = `第 ${currentLightboxIndex + 1} / 共 ${allPhotos.length} 张`;
+      }
+
+      if (storyEl) {
+        let storyText = '';
+        try {
+          const allData = loadPhotos();
+          let photoObj = null;
+
+          if (p.id) {
+            // 优先根据月份快速查找
+            if (p.month && allData[p.month]) {
+              photoObj = allData[p.month].find(photo => photo.id === p.id) || null;
+            }
+            // 如果月份缺失或未找到，则在所有月份中兜底查找
+            if (!photoObj) {
+              for (const month in allData) {
+                const found = allData[month].find(photo => photo.id === p.id);
+                if (found) {
+                  photoObj = found;
+                  break;
+                }
+              }
+            }
+          }
+
+          if (photoObj && photoObj.story) {
+            storyText = photoObj.story;
+          }
+        } catch (err) {
+          console.warn('展示照片故事时读取数据失败:', err);
+        }
+
+        storyEl.textContent = storyText;
+        storyEl.style.display = storyText ? 'block' : 'none';
+      }
     }
 
     // 键盘支持
@@ -2474,17 +3054,30 @@
       }
     });
 
-    // ESC 关闭上传弹窗
+    // ESC 关闭上传 / 配置弹窗
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && document.getElementById('uploadModal').classList.contains('active')) {
+      if (e.key !== 'Escape') return;
+      const configModal = document.getElementById('configModal');
+      if (configModal && configModal.classList.contains('active')) {
+        closeConfigModal();
+        return;
+      }
+      const uploadModal = document.getElementById('uploadModal');
+      if (uploadModal && uploadModal.classList.contains('active')) {
         closeUploadModal();
       }
     });
 
-    // 点击遮罩关闭弹窗
+    // 点击遮罩关闭上传 / 配置弹窗
     document.getElementById('uploadModal').addEventListener('click', (e) => {
       if (e.target === document.getElementById('uploadModal')) closeUploadModal();
     });
+    const configModalEl = document.getElementById('configModal');
+    if (configModalEl) {
+      configModalEl.addEventListener('click', (e) => {
+        if (e.target === configModalEl) closeConfigModal();
+      });
+    }
 
     // ============================================================
     // ✏️ 编辑照片文案功能
@@ -2511,6 +3104,8 @@
       document.getElementById('editPreviewImg').src = photo.dataUrl;
       document.getElementById('editCaption').value = photo.caption || '';
       document.getElementById('editDate').value = photo.date || '';
+      const editStoryEl = document.getElementById('editStory');
+      if (editStoryEl) editStoryEl.value = photo.story || '';
 
       const overlay = document.getElementById('editOverlay');
       overlay.classList.add('active');
@@ -2532,6 +3127,7 @@
 
       const newCaption = document.getElementById('editCaption').value.trim();
       const newDate = document.getElementById('editDate').value.trim();
+      const newStory = (document.getElementById('editStory')?.value || '').trim();
 
       const allData = loadPhotos();
       if (allData[editingPhotoId.month]) {
@@ -2539,6 +3135,7 @@
         if (photoIndex !== -1) {
           allData[editingPhotoId.month][photoIndex].caption = newCaption;
           allData[editingPhotoId.month][photoIndex].date = newDate;
+          allData[editingPhotoId.month][photoIndex].story = newStory;
           savePhotos(allData);
 
           closeEditPanel({ target: document.getElementById('editOverlay'), currentTarget: document.getElementById('editOverlay') });
@@ -2707,6 +3304,13 @@
     // ============================================================
     // 🚀 初始化
     // ============================================================
+    // 离开页面前，如有未同步变更则提示用户
+    window.addEventListener('beforeunload', (event) => {
+      if (!hasUnsavedChanges) return;
+      event.preventDefault();
+      event.returnValue = '';
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       // 从内嵌 script 标签读取预存的照片数据
       try {
@@ -2718,6 +3322,9 @@
         console.warn('读取内嵌数据失败，使用空数据', e);
         EMBEDDED_DATA = {};
       }
+
+      // 应用相册配置（总月份数 & 每月文案）
+      applyConfigToRuntime();
 
       initTimelineNav();
       setupScrollListener();
